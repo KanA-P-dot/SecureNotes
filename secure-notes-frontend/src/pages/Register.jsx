@@ -1,26 +1,50 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import axios from 'axios'
 
 function Register() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  
+  const [success, setSuccess] = useState('')
+  const [error, setError] = useState('')
+  const navigate = useNavigate()
+
   // TODO: ajouter validation email
   // TODO: verifier longueur mot de passe
-  
-  const handleSubmit = (e) => {
+
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    
-    // validation qu'il rentre bien les infos
+    setError('')
+    setSuccess('')
+
+    // Validation basique
     if (!email || !password) {
-      alert('Veuillez remplir tous les champs')
+      setError('Veuillez remplir tous les champs')
       return
     }
-    
-    console.log('Register:', { email, password })
-    
+
+    try {
+      const res = await axios.post('http://localhost:3000/api/register', {
+        email,
+        password
+      })
+      
+      setSuccess('Inscription réussie. Redirection en cours...')
+      
     // on vide les champs après soumission 
-    setEmail('')
-    setPassword('')
+      setEmail('')
+      setPassword('')
+      
+      setTimeout(() => {
+        navigate('/login')
+      }, 1500)
+    } catch (err) {
+      if (err.response && err.response.data.message) {
+        setError(err.response.data.message)
+      } else {
+        setError('Une erreur est survenue')
+      }
+    }
   }
 
   return (
@@ -28,12 +52,12 @@ function Register() {
       <h2>Inscription</h2>
       <form onSubmit={handleSubmit}>
         <div style={{ marginBottom: '15px' }}>
-          <input 
-            type="email" 
+          <input
+            type="email"
             placeholder="Email"
-            value={email} 
-            onChange={(e) => setEmail(e.target.value)} 
-            required 
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
             style={{
               width: '100%',
               padding: '8px',
@@ -42,14 +66,13 @@ function Register() {
             }}
           />
         </div>
-        
         <div style={{ marginBottom: '15px' }}>
-          <input 
-            type="password" 
+          <input
+            type="password"
             placeholder="Mot de passe"
-            value={password} 
-            onChange={(e) => setPassword(e.target.value)} 
-            required 
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
             style={{
               width: '100%',
               padding: '8px',
@@ -58,8 +81,8 @@ function Register() {
             }}
           />
         </div>
-        
-        <button 
+
+        <button
           type="submit"
           style={{
             width: '100%',
@@ -73,6 +96,8 @@ function Register() {
         >
           S'inscrire
         </button>
+        {success && <p style={{ color: 'green' }}>{success}</p>}
+        {error && <p style={{ color: 'red' }}>{error}</p>}
       </form>
     </div>
   )
