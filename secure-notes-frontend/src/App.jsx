@@ -4,6 +4,7 @@ import Dashboard from './pages/Dashboard'
 import Login from './pages/Login'
 import Register from './pages/Register'
 // import NoteEditor from './pages/NoteEditor'
+import PrivateRoute from './components/PrivateRoute'
 
 // App principal - gère les routes
 function App() {
@@ -13,10 +14,10 @@ function App() {
         <Navbar />
         <div className="main-content">
           <Routes>
-            <Route path="/" element={<Dashboard />} />
+          <Route path="/" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-            {/* <Route path="/note/:id" element={<NoteEditor />} /> */}
+            {/* <Route path="/note/:id" element={<PrivateRoute><NoteEditor /></PrivateRoute>} /> */}
           </Routes>
         </div>
       </div>
