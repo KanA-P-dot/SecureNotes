@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { fetchNotes, addNote } from '../services/api'
+import { fetchNotes, addNote, rmNote } from '../services/api'
 
 function Dashboard() {
   const [notes, setNotes] = useState([])
@@ -34,6 +34,16 @@ function Dashboard() {
       setNewNote('')
     } catch (err) {
       setError('Erreur lors de la création de la note')
+      console.error(err)
+    }
+  }
+
+  const handleDeleteNote = async (noteId) => {
+    try {
+      await rmNote(noteId)
+      setNotes(notes.filter(note => note.id !== noteId))
+    } catch (err) {
+      setError('Erreur lors de la suppression')
       console.error(err)
     }
   }
@@ -95,6 +105,20 @@ function Dashboard() {
               <p style={{ whiteSpace: 'pre-wrap', marginBottom: '10px', color: '#333' }}>
                 {note.content}
               </p>
+              <button
+                onClick={() => handleDeleteNote(note.id)}
+                style={{
+                  padding: '5px 10px',
+                  backgroundColor: '#dc3545',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '4px',
+                  cursor: 'pointer',
+                  fontSize: '12px'
+                }}
+              >
+                Supprimer
+              </button>
             </div>
           ))
         )}
