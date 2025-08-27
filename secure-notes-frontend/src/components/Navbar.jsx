@@ -1,5 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom'
 import { getToken } from '../services/api'
+import { clearEncryptionKey } from '../utils/crypto'
 
 function Navbar() {
   const navigate = useNavigate()
@@ -7,6 +8,7 @@ function Navbar() {
 
   const handleLogout = () => {
     localStorage.removeItem('token')
+    clearEncryptionKey()
     navigate('/login')
   }
 
