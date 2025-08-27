@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
+import { generateEncryptionKey, storeEncryptionKey } from '../utils/crypto'
 
 function Login() {
   const [email, setEmail] = useState('')
@@ -21,7 +22,6 @@ function Login() {
     }
 
     try {
-      //  remplacer url par backend
       const response = await axios.post('http://localhost:3000/api/login', {
         email,
         password
@@ -29,6 +29,11 @@ function Login() {
       
       const token = response.data.token
       localStorage.setItem('token', token)
+      
+      // genere clé de chiffrement
+      const key = generateEncryptionKey(email, password)
+      storeEncryptionKey(key)
+      
       navigate('/') // Redirige vers Dashboard
     } catch (err) {
       console.error(err)
