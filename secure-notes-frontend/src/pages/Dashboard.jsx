@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { fetchNotes, addNote, rmNote, editNote } from '../services/api'
+import { getStoredEncryptionKey, clearEncryptionKey } from '../utils/crypto'
 
 function Dashboard() {
   const [notes, setNotes] = useState([])
@@ -8,6 +10,7 @@ function Dashboard() {
   const [error, setError] = useState('')
   const [editingNote, setEditingNote] = useState(null)
   const [editContent, setEditContent] = useState('')
+  const navigate = useNavigate()
 
   useEffect(() => {
     loadNotes()
@@ -16,6 +19,16 @@ function Dashboard() {
   const loadNotes = async () => {
     try {
       setLoading(true)
+      
+      // verif clé de chiffrement
+      const key = getStoredEncryptionKey()
+      if (!key) {
+        clearEncryptionKey()
+        localStorage.removeItem('token')
+        navigate('/login')
+        return
+      }
+      
       const data = await fetchNotes()
       setNotes(data)
     } catch (err) {
