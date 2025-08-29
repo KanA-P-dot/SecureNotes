@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { fetchNotes, addNote, rmNote, editNote } from '../services/api'
 import { getStoredEncryptionKey, clearEncryptionKey } from '../utils/crypto'
+import styles from './Dashboard.module.css'
 
 function Dashboard() {
   const [notes, setNotes] = useState([])
@@ -96,21 +97,25 @@ function Dashboard() {
   )
 
   return (
-    <div style={{ maxWidth: '900px', margin: '0 auto', padding: '20px' }}>
-      <h1 style={{ textAlign: 'center', marginBottom: '30px', color: '#2c3e50' }}>Mes Notes Sécurisées</h1>
+    <div className={styles['dashboard-container']}>
+      <h1 className={styles['dashboard-title']}>Mes Notes Sécurisées</h1>
       
+            
       {error && (
-        <div style={{ 
-          color: '#e74c3c', 
-          backgroundColor: '#fdf2f2', 
-          padding: '10px', 
-          borderRadius: '4px', 
-          marginBottom: '20px',
-          border: '1px solid #f5c6cb'
-        }}>
+        <div className={styles['error-message']}>
           {error}
         </div>
       )}
+      
+      <div className={styles['search-container']}>
+        <input
+          type="text"
+          placeholder="Rechercher dans les notes..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className={styles['search-input']}
+        />
+      </div>
       
       {/* Barre de recherche */}
       <div style={{ marginBottom: '20px' }}>
@@ -133,46 +138,18 @@ function Dashboard() {
         />
       </div>
       
-      <form onSubmit={handleAddNote} style={{ marginBottom: '40px' }}>
-        <div style={{ 
-          backgroundColor: '#f8f9fa', 
-          padding: '20px', 
-          borderRadius: '8px',
-          border: '1px solid #e9ecef'
-        }}>
-          <h3 style={{ marginTop: '0', color: '#495057' }}>Nouvelle note</h3>
+      <form onSubmit={handleAddNote}>
+        <div className={styles['new-note-container']}>
+          <h3 className={styles['new-note-title']}>Nouvelle note</h3>
           <textarea
             value={newNote}
             onChange={(e) => setNewNote(e.target.value)}
             placeholder="Écrivez votre nouvelle note..."
-            style={{
-              width: '100%',
-              height: '120px',
-              padding: '12px',
-              border: '2px solid #e9ecef',
-              borderRadius: '6px',
-              marginBottom: '15px',
-              color: '#333',
-              fontSize: '16px',
-              resize: 'vertical',
-              outline: 'none'
-            }}
+            className={styles['new-note-textarea']}
           />
           <button
             type="submit"
-            style={{
-              padding: '12px 24px',
-              backgroundColor: '#28a745',
-              color: 'white',
-              border: 'none',
-              borderRadius: '6px',
-              cursor: 'pointer',
-              fontSize: '16px',
-              fontWeight: '500',
-              transition: 'background-color 0.3s'
-            }}
-            onMouseOver={(e) => e.target.style.backgroundColor = '#218838'}
-            onMouseOut={(e) => e.target.style.backgroundColor = '#28a745'}
+            className={styles['add-note-btn']}
           >
             Ajouter la note
           </button>
@@ -180,100 +157,53 @@ function Dashboard() {
       </form>
 
       <div>
-        <h2>Mes notes ({filteredNotes.length}{searchTerm && ` sur ${notes.length}`})</h2>
+        <h2 className={styles['notes-list-title']}>Mes notes ({filteredNotes.length}{searchTerm && ` sur ${notes.length}`})</h2>
         {filteredNotes.length === 0 ? (
           <p>{searchTerm ? 'Aucune note trouvée pour cette recherche.' : 'Aucune note pour le moment.'}</p>
         ) : (
           filteredNotes.map(note => (
-            <div
-              key={note.id}
-              style={{
-                border: '1px solid #ddd',
-                borderRadius: '4px',
-                padding: '15px',
-                marginBottom: '10px',
-                backgroundColor: '#f9f9f9'
-              }}
-            >
+            <div key={note.id} className={styles['note-card']}>
               {editingNote === note.id ? (
                 <div>
                   <textarea
                     value={editContent}
                     onChange={(e) => setEditContent(e.target.value)}
-                    style={{
-                      width: '100%',
-                      height: '80px',
-                      padding: '8px',
-                      border: '1px solid #ccc',
-                      borderRadius: '4px',
-                      marginBottom: '10px',
-                      color: '#333'
-                    }}
+                    className={styles['edit-textarea']}
                   />
-                  <button
-                    onClick={() => saveEdit(note.id)}
-                    style={{
-                      padding: '5px 10px',
-                      backgroundColor: '#28a745',
-                      color: 'white',
-                      border: 'none',
-                      borderRadius: '4px',
-                      cursor: 'pointer',
-                      fontSize: '12px',
-                      marginRight: '5px'
-                    }}
-                  >
-                    Sauvegarder
-                  </button>
-                  <button
-                    onClick={cancelEdit}
-                    style={{
-                      padding: '5px 10px',
-                      backgroundColor: '#6c757d',
-                      color: 'white',
-                      border: 'none',
-                      borderRadius: '4px',
-                      cursor: 'pointer',
-                      fontSize: '12px'
-                    }}
-                  >
-                    Annuler
-                  </button>
+                  <div className={styles['note-actions']}>
+                    <button
+                      onClick={() => saveEdit(note.id)}
+                      className={styles['btn-save']}
+                    >
+                      Sauvegarder
+                    </button>
+                    <button
+                      onClick={cancelEdit}
+                      className={styles['btn-cancel']}
+                    >
+                      Annuler
+                    </button>
+                  </div>
                 </div>
               ) : (
                 <div>
-                  <p style={{ whiteSpace: 'pre-wrap', marginBottom: '10px', color: '#333' }}>
+                  <p className={styles['note-content']}>
                     {note.content}
                   </p>
-                  <button
-                    onClick={() => startEdit(note)}
-                    style={{
-                      padding: '5px 10px',
-                      backgroundColor: '#ffc107',
-                      color: 'black',
-                      border: 'none',
-                      borderRadius: '4px',
-                      cursor: 'pointer',
-                      fontSize: '12px',
-                      marginRight: '5px'
-                    }}
-                  >
-                    Modifier
-                  </button>
-                  <button
-                    onClick={() => handleDeleteNote(note.id)}
-                    style={{
-                      padding: '5px 10px',
-                      backgroundColor: '#dc3545',
-                      color: 'white',
-                      border: 'none',
-                      borderRadius: '4px',
-                      cursor: 'pointer',
-                      fontSize: '12px'
-                    }}
-                  >
-                    Supprimer
-                  </button>
+                  <div className={styles['note-actions']}>
+                    <button
+                      onClick={() => startEdit(note)}
+                      className={styles['btn-edit']}
+                    >
+                      Modifier
+                    </button>
+                    <button
+                      onClick={() => handleDeleteNote(note.id)}
+                      className={styles['btn-delete']}
+                    >
+                      Supprimer
+                    </button>
+                  </div>
                 </div>
               )}
             </div>
