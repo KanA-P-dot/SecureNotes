@@ -7,8 +7,9 @@
 .dashboard-title {
   text-align: center;
   margin-bottom: 30px;
-  color: #2c3e50;
+  color: #007bff;
   font-size: 32px;
+  font-weight: 600;
 }
 
 .error-message {
@@ -47,6 +48,17 @@
   background-color: white;
   outline: none;
   cursor: pointer;
+  color: #212529;
+}
+
+.sort-select option {
+  background-color: white;
+  color: #212529;
+  padding: 8px;
+}
+
+.sort-select:hover {
+  border-color: #007bff;
 }
 
 .search-input:focus {
@@ -74,10 +86,11 @@
   border: 2px solid #e9ecef;
   border-radius: 6px;
   margin-bottom: 15px;
-  color: #333;
+  color: #212529;
   font-size: 16px;
   resize: vertical;
   outline: none;
+  background-color: white;
 }
 
 .add-note-btn {
