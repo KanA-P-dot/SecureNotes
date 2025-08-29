@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ./secure-notes-backend
+    container_name: secure-notes-backend
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - JWT_SECRET=   
+      - PORT=3000
+    volumes:
+      - ./data:/app/data
+    networks:
+      - secure-notes-network
+    restart: unless-stopped
+
+  frontend:
+    build: ./secure-notes-frontend
+    container_name: secure-notes-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - secure-notes-network
+    restart: unless-stopped
+
+networks:
+  secure-notes-network:
+    driver: bridge
+
+volumes:
+  database_data:

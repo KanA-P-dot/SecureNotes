@@ -1,0 +1,40 @@
+# Docker Compose pour le développement
+version: '3.8'
+
+services:
+  backend:
+    build: ./secure-notes-backend
+    container_name: secure-notes-backend-dev
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - JWT_SECRET=dev_jwt_secret_not_for_production
+      - PORT=3000
+    volumes:
+      - ./secure-notes-backend:/app
+      - /app/node_modules
+      - ./data:/app/data
+    networks:
+      - secure-notes-network
+    command: npm run dev
+
+  frontend:
+    build: 
+      context: ./secure-notes-frontend
+      target: build
+    container_name: secure-notes-frontend-dev
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_URL=http://localhost:3000
+    volumes:
+      - ./secure-notes-frontend:/app
+      - /app/node_modules
+    networks:
+      - secure-notes-network
+    command: npm run dev
+
+networks:
+  secure-notes-network:
+    driver: bridge
