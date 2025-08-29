@@ -1,6 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom'
 import { getToken } from '../services/api'
 import { clearEncryptionKey } from '../utils/crypto'
+import styles from './Navbar.module.css'
 
 function Navbar() {
   const navigate = useNavigate()
@@ -13,45 +14,29 @@ function Navbar() {
   }
 
   return (
-    <nav style={{
-      backgroundColor: '#333',
-      padding: '10px 20px',
-      marginBottom: '20px'
-    }}>
-      <ul style={{
-        listStyle: 'none',
-        display: 'flex',
-        gap: '20px',
-        margin: 0,
-        padding: 0,
-        alignItems: 'center'
-      }}>
-        {isLoggedIn ? (
-          <>
-            <li><Link to="/" style={{ color: 'white', textDecoration: 'none' }}>Mes Notes</Link></li>
-            <li>
+    <nav className={styles.navbar}>
+      <div className={styles['nav-list']}>
+        <Link to="/" className={styles['nav-brand']}>SecureNotes</Link>
+        
+        <div className={styles['nav-links']}>
+          {isLoggedIn ? (
+            <>
+              <Link to="/" className={styles['nav-link']}>Mes Notes</Link>
               <button 
                 onClick={handleLogout}
-                style={{
-                  backgroundColor: '#dc3545',
-                  color: 'white',
-                  border: 'none',
-                  padding: '5px 10px',
-                  borderRadius: '4px',
-                  cursor: 'pointer'
-                }}
+                className={styles['logout-btn']}
               >
                 Déconnexion
               </button>
-            </li>
-          </>
-        ) : (
-          <>
-            <li><Link to="/login" style={{ color: 'white', textDecoration: 'none' }}>Connexion</Link></li>
-            <li><Link to="/register" style={{ color: 'white', textDecoration: 'none' }}>Inscription</Link></li>
-          </>
-        )}
-      </ul>
+            </>
+          ) : (
+            <>
+              <Link to="/login" className={styles['nav-link']}>Connexion</Link>
+              <Link to="/register" className={styles['nav-link']}>Inscription</Link>
+            </>
+          )}
+        </div>
+      </div>
     </nav>
   )
 }
