@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
+import styles from './Auth.module.css'
 
 function Register() {
   const [email, setEmail] = useState('')
@@ -76,71 +77,48 @@ function Register() {
   }
 
   return (
-    <div style={{ maxWidth: '400px', margin: '0 auto', padding: '20px' }}>
-      <h2>Inscription</h2>
+    <div className={styles['auth-container']}>
+      <h2 className={styles['auth-title']}>Inscription</h2>
       <form onSubmit={handleSubmit}>
-        <div style={{ marginBottom: '15px' }}>
+        <div className={styles['form-group']}>
           <input
             type="email"
             placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            style={{
-              width: '100%',
-              padding: '8px',
-              border: '1px solid #ccc',
-              borderRadius: '4px'
-            }}
+            className={styles['form-input']}
           />
         </div>
-        <div style={{ marginBottom: '15px' }}>
+        <div className={styles['form-group']}>
           <input
             type="password"
             placeholder="Mot de passe"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
-            style={{
-              width: '100%',
-              padding: '8px',
-              border: '1px solid #ccc',
-              borderRadius: '4px'
-            }}
+            className={styles['form-input']}
           />
         </div>
-        <div style={{ marginBottom: '15px' }}>
+        <div className={styles['form-group']}>
           <input
             type="password"
             placeholder="Confirmer le mot de passe"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             required
-            style={{
-              width: '100%',
-              padding: '8px',
-              border: '1px solid #ccc',
-              borderRadius: '4px'
-            }}
+            className={styles['form-input']}
           />
         </div>
 
         <button
           type="submit"
-          style={{
-            width: '100%',
-            padding: '10px',
-            backgroundColor: '#007bff',
-            color: 'white',
-            border: 'none',
-            borderRadius: '4px',
-            cursor: 'pointer'
-          }}
+          className={styles['submit-btn']}
         >
           S'inscrire
         </button>
-        {success && <p style={{ color: 'green' }}>{success}</p>}
-        {error && <p style={{ color: 'red' }}>{error}</p>}
+        {success && <div className={styles['success-message']}>{success}</div>}
+        {error && <div className={styles['error-message']}>{error}</div>}
       </form>
     </div>
   )

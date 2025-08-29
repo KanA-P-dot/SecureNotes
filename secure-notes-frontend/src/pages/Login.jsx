@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { generateEncryptionKey, storeEncryptionKey } from '../utils/crypto'
+import styles from './Auth.module.css'
 
 function Login() {
   const [email, setEmail] = useState('')
@@ -58,56 +59,38 @@ function Login() {
   }
 
   return (
-    <div style={{ maxWidth: '400px', margin: '0 auto', padding: '20px' }}>
-      <h2>Connexion</h2>
+    <div className={styles['auth-container']}>
+      <h2 className={styles['auth-title']}>Connexion</h2>
       <form onSubmit={handleSubmit}>
-        <div style={{ marginBottom: '15px' }}>
+        <div className={styles['form-group']}>
           <input
             type="email"
             placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            style={{
-              width: '100%',
-              padding: '8px',
-              border: '1px solid #ccc',
-              borderRadius: '4px'
-            }}
+            className={styles['form-input']}
           />
         </div>
-        <div style={{ marginBottom: '15px' }}>
+        <div className={styles['form-group']}>
           <input
             type="password"
             placeholder="Mot de passe"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
-            style={{
-              width: '100%',
-              padding: '8px',
-              border: '1px solid #ccc',
-              borderRadius: '4px'
-            }}
+            className={styles['form-input']}
           />
         </div>
         <button
           type="submit"
           disabled={loading}
-          style={{
-            width: '100%',
-            padding: '10px',
-            backgroundColor: loading ? '#6c757d' : '#007bff',
-            color: 'white',
-            border: 'none',
-            borderRadius: '4px',
-            cursor: loading ? 'not-allowed' : 'pointer'
-          }}
+          className={styles['submit-btn']}
         >
           {loading ? 'Connexion...' : 'Se connecter'}
         </button>
       </form>
-      {error && <p style={{ color: 'red', marginTop: '10px' }}>{error}</p>}
+      {error && <div className={styles['error-message']}>{error}</div>}
     </div>
   )
 }
