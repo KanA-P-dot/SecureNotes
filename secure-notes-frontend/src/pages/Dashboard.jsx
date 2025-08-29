@@ -139,27 +139,6 @@ function Dashboard() {
         </select>
       </div>
       
-      {/* Barre de recherche */}
-      <div style={{ marginBottom: '20px' }}>
-        <input
-          type="text"
-          placeholder="Rechercher dans les notes..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          style={{
-            width: '100%',
-            padding: '12px',
-            border: '2px solid #e9ecef',
-            borderRadius: '8px',
-            fontSize: '16px',
-            outline: 'none',
-            transition: 'border-color 0.3s'
-          }}
-          onFocus={(e) => e.target.style.borderColor = '#007bff'}
-          onBlur={(e) => e.target.style.borderColor = '#e9ecef'}
-        />
-      </div>
-      
       <form onSubmit={handleAddNote}>
         <div className={styles['new-note-container']}>
           <h3 className={styles['new-note-title']}>Nouvelle note</h3>
@@ -179,11 +158,11 @@ function Dashboard() {
       </form>
 
       <div>
-        <h2 className={styles['notes-list-title']}>Mes notes ({filteredNotes.length}{searchTerm && ` sur ${notes.length}`})</h2>
-        {filteredNotes.length === 0 ? (
+        <h2 className={styles['notes-list-title']}>Mes notes ({sortedNotes.length}{searchTerm && ` sur ${notes.length}`})</h2>
+        {sortedNotes.length === 0 ? (
           <p>{searchTerm ? 'Aucune note trouvée pour cette recherche.' : 'Aucune note pour le moment.'}</p>
         ) : (
-          filteredNotes.map(note => (
+          sortedNotes.map(note => (
             <div key={note.id} className={styles['note-card']}>
               {editingNote === note.id ? (
                 <div>
