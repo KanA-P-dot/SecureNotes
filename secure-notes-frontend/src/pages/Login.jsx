@@ -8,9 +8,7 @@ function Login() {
   const [password, setPassword] = useState('')
   const navigate = useNavigate()
   const [error, setError] = useState('')
-
-  // TODO: ajouter validation email
-  // TODO: améliorer gestion erreurs
+  const [loading, setLoading] = useState(false)
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -20,6 +18,16 @@ function Login() {
       setError('Veuillez remplir tous les champs')
       return
     }
+
+    // Validation email basique
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!emailRegex.test(email)) {
+      setError('Veuillez entrer une adresse email valide')
+      return
+    }
+
+    setLoading(true)
+    setError('')
 
     try {
       const response = await axios.post('http://localhost:3000/api/login', {
@@ -37,7 +45,15 @@ function Login() {
       navigate('/') // Redirige vers Dashboard
     } catch (err) {
       console.error(err)
-      setError('Email ou mot de passe incorrect')
+      if (err.response?.status === 401) {
+        setError('Email ou mot de passe incorrect')
+      } else if (err.response?.status >= 500) {
+        setError('Erreur serveur, veuillez réessayer plus tard')
+      } else {
+        setError('Une erreur est survenue lors de la connexion')
+      }
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -77,17 +93,18 @@ function Login() {
         </div>
         <button
           type="submit"
+          disabled={loading}
           style={{
             width: '100%',
             padding: '10px',
-            backgroundColor: '#007bff',
+            backgroundColor: loading ? '#6c757d' : '#007bff',
             color: 'white',
             border: 'none',
             borderRadius: '4px',
-            cursor: 'pointer'
+            cursor: loading ? 'not-allowed' : 'pointer'
           }}
         >
-          Se connecter
+          {loading ? 'Connexion...' : 'Se connecter'}
         </button>
       </form>
       {error && <p style={{ color: 'red', marginTop: '10px' }}>{error}</p>}
