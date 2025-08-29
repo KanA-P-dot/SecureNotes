@@ -5,12 +5,19 @@ import axios from 'axios'
 function Register() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
   const [success, setSuccess] = useState('')
   const [error, setError] = useState('')
   const navigate = useNavigate()
 
-  // TODO: ajouter validation email
-  // TODO: verifier longueur mot de passe
+  // Validation du mot de passe
+  const validatePassword = (pwd) => {
+    if (pwd.length < 8) return 'Le mot de passe doit faire au moins 8 caractères'
+    if (!/[A-Z]/.test(pwd)) return 'Le mot de passe doit contenir au moins une majuscule'
+    if (!/[a-z]/.test(pwd)) return 'Le mot de passe doit contenir au moins une minuscule'
+    if (!/[0-9]/.test(pwd)) return 'Le mot de passe doit contenir au moins un chiffre'
+    return null
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -18,8 +25,28 @@ function Register() {
     setSuccess('')
 
     // Validation basique
-    if (!email || !password) {
+    if (!email || !password || !confirmPassword) {
       setError('Veuillez remplir tous les champs')
+      return
+    }
+
+    // Validation email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!emailRegex.test(email)) {
+      setError('Veuillez entrer une adresse email valide')
+      return
+    }
+
+    // Validation mot de passe
+    const passwordError = validatePassword(password)
+    if (passwordError) {
+      setError(passwordError)
+      return
+    }
+
+    // Vérification confirmation
+    if (password !== confirmPassword) {
+      setError('Les mots de passe ne correspondent pas')
       return
     }
 
@@ -34,6 +61,7 @@ function Register() {
     // on vide les champs après soumission 
       setEmail('')
       setPassword('')
+      setConfirmPassword('')
       
       setTimeout(() => {
         navigate('/login')
@@ -72,6 +100,21 @@ function Register() {
             placeholder="Mot de passe"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            required
+            style={{
+              width: '100%',
+              padding: '8px',
+              border: '1px solid #ccc',
+              borderRadius: '4px'
+            }}
+          />
+        </div>
+        <div style={{ marginBottom: '15px' }}>
+          <input
+            type="password"
+            placeholder="Confirmer le mot de passe"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
             required
             style={{
               width: '100%',
