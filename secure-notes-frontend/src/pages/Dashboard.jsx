@@ -12,6 +12,7 @@ function Dashboard() {
   const [editingNote, setEditingNote] = useState(null)
   const [editContent, setEditContent] = useState('')
   const [searchTerm, setSearchTerm] = useState('')
+  const [sortBy, setSortBy] = useState('newest')
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -96,6 +97,18 @@ function Dashboard() {
     note.content.toLowerCase().includes(searchTerm.toLowerCase())
   )
 
+  // Tri des notes
+  const sortedNotes = [...filteredNotes].sort((a, b) => {
+    if (sortBy === 'newest') {
+      return new Date(b.updated_at || b.created_at) - new Date(a.updated_at || a.created_at)
+    } else if (sortBy === 'oldest') {
+      return new Date(a.updated_at || a.created_at) - new Date(b.updated_at || b.created_at)
+    } else if (sortBy === 'alphabetical') {
+      return a.content.localeCompare(b.content)
+    }
+    return 0
+  })
+
   return (
     <div className={styles['dashboard-container']}>
       <h1 className={styles['dashboard-title']}>Mes Notes Sécurisées</h1>
@@ -115,6 +128,15 @@ function Dashboard() {
           onChange={(e) => setSearchTerm(e.target.value)}
           className={styles['search-input']}
         />
+        <select 
+          value={sortBy} 
+          onChange={(e) => setSortBy(e.target.value)}
+          className={styles['sort-select']}
+        >
+          <option value="newest">Plus récentes</option>
+          <option value="oldest">Plus anciennes</option>
+          <option value="alphabetical">Alphabétique</option>
+        </select>
       </div>
       
       {/* Barre de recherche */}
